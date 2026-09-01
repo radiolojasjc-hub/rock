@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🩺 Prontuário Digital - Lucas Mendes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* ============================================================
+           RESET & BASE
+           ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #0a0a16;
+            min-height: 100vh;
+            padding: 25px 20px;
+            background-image: radial-gradient(ellipse at 20% 30%, rgba(42, 125, 225, 0.06) 0%, transparent 60%),
+                              radial-gradient(ellipse at 80% 70%, rgba(39, 174, 96, 0.04) 0%, transparent 50%);
+        }
+
+        /* ============================================================
+           CONTAINER PRINCIPAL
+           ============================================================ */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ============================================================
+           HEADER
+           ============================================================ */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 20px 28px;
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(16px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .avatar {
+            width: 58px;
+            height: 58px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #2a7de1, #1a5cb0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            color: white;
+            box-shadow: 0 8px 30px rgba(42, 125, 225, 0.25);
+        }
+
+        .header h1 {
+            color: #ffffff;
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        .header h1 span {
+            color: #4a9eff;
+        }
+
+        .header .sub {
+            color: #8899bb;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .whatsapp-badge {
+            background: rgba(37, 211, 102, 0.12);
+            border: 1px solid rgba(37, 211, 102, 0.15);
+            padding: 8px 18px;
+            border-radius: 30px;
+            color: #25d366;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+
+        .whatsapp-badge i {
+            font-size: 18px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #27ae60;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.4;
+                transform: scale(0.8);
+            }
+        }
+
+        /* ============================================================
+           GRID PRINCIPAL
+           ============================================================ */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+            margin-bottom: 22px;
+        }
+
+        @media (max-width: 900px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ============================================================
+           CARDS
+           ============================================================ */
+        .card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 24px 26px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .card-title {
+            color: #e8edf5;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title i {
+            color: #4a9eff;
+            font-size: 18px;
+            width: 28px;
+            text-align: center;
+        }
+
+        /* ============================================================
+           FORMULÁRIO DE AGENDAMENTO
+           ============================================================ */
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 130px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            color: #8899bb;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 14px;
+            transition: 0.3s;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #445566;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #4a9eff;
+            background: rgba(255, 255, 255, 0.07);
+            box-shadow: 0 0 0 4px rgba(42, 125, 225, 0.1);
+        }
+
+        .form-group select option {
+            background: #1a1a2e;
+            color: #fff;
+        }
+
+        .form-group input[type="datetime-local"] {
+            color-scheme: dark;
+        }
+
+        .btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2a7de1, #1a5cb0);
+            color: white;
+            box-shadow: 0 8px 25px rgba(42, 125, 225, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(42, 125, 225, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #25d366, #1a8c4a);
+            color: white;
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.2);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(37, 211, 102, 0.3);
+        }
+
+        .btn-danger {
+            background: rgba(231, 76, 60, 0.15);
+            color: #e74c3c;
+            border: 1px solid rgba(231, 76, 60, 0.15);
+        }
+
+        .btn-danger:hover {
+            background: rgba(231, 76, 60, 0.25);
+        }
+
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.05);
+            color: #b0c4de;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 12px;
+            border-radius: 8px;
+        }
+
+        .btn-block {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* ============================================================
+           LISTA DE AGENDAMENTOS
+           ============================================================ */
+        .appointment-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 14px;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            transition: 0.3s;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .appointment-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .appointment-item .info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .appointment-item .info .nome {
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .appointment-item .info .detalhes {
+            color: #7788aa;
+            font-size: 13px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .appointment-item .info .detalhes i {
+            color: #4a9eff;
+            width: 16px;
+        }
+
+        .appointment-item .actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-tag {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            background: rgba(39, 174, 96, 0.12);
+            color: #27ae60;
+            border: 1px solid rgba(39, 174, 96, 0.1);
+        }
+
+        .status-tag.hoje {
+            background: rgba(42, 125, 225, 0.12);
+            color: #4a9eff;
+            border-color: rgba(42, 125, 225, 0.1);
+        }
+
+        .status-tag.passado {
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+            border-color: rgba(231, 76, 60, 0.1);
+        }
+
+        .status-tag.amanha {
+            background: rgba(241, 196, 15, 0.1);
+            color: #f1c40f;
+            border-color: rgba(241, 196, 15, 0.1);
+        }
+
+        /* ============================================================
+           RELATÓRIOS / EVOLUÇÃO
+           ============================================================ */
+        .relatorio-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 14px;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            border-left: 3px solid #4a9eff;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-left-width: 4px;
+        }
+
+        .relatorio-item .data {
+            color: #667788;
+            font-size: 12px;
+        }
+
+        .relatorio-item .texto {
+            color: #d0d8e8;
+            font-size: 14px;
+            margin-top: 4px;
+            line-height: 1.5;
+        }
+
+        .relatorio-item .texto i {
+            color: #4a9eff;
+            margin-right: 6px;
+        }
+
+        /* ============================================================
+           RECEITAS E EXAMES (ARQUIVOS)
+           ============================================================ */
+        .arquivo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .arquivo-item .file-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #b0c4de;
+        }
+
+        .arquivo-item .file-info i {
+            font-size: 22px;
+            color: #4a9eff;
+        }
+
+        .arquivo-item .file-info .nome {
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .arquivo-item .file-info .tamanho {
+            color: #667788;
+            font-size: 12px;
+        }
+
+        .arquivo-item .file-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .file-upload-area {
+            border: 2px dashed rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 20px;
+            text-align: center;
+            color: #667788;
+            transition: 0.3s;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+
+        .file-upload-area:hover {
+            border-color: rgba(42, 125, 225, 0.3);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .file-upload-area i {
+            font-size: 32px;
+            color: #4a9eff;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .file-upload-area input[type="file"] {
+            display: none;
+        }
+
+        /* ============================================================
+           SCROLL
+           ============================================================ */
+        .scroll-area {
+            max-height: 280px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .scroll-area::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .scroll-area::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+        }
+
+        .scroll-area::-webkit-scrollbar-thumb {
+            background: rgba(42, 125, 225, 0.2);
+            border-radius: 10px;
+        }
+
+        /* ============================================================
+           NOTIFICAÇÃO FLUTUANTE
+           ============================================================ */
+        .notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            max-width: 400px;
+            background: rgba(16, 16, 32, 0.96);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 20px 24px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            display: none;
+            z-index: 999;
+            animation: notifSlide 0.4s ease;
+            border-left: 4px solid #4a9eff;
+        }
+
+        @keyframes notifSlide {
+            from {
+                opacity: 0;
+                transform: translateX(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .notification.show {
+            display: block;
+        }
+
+        .notification .titulo {
+            color: #fff;
+            font-weight: 600;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notification .titulo i {
+            color: #4a9eff;
+        }
+
+        .notification .mensagem {
+            color: #8899bb;
+            font-size: 13px;
+            margin-top: 5px;
+            line-height: 1.5;
+        }
+
+        .notification .hora {
+            color: #445566;
+            font-size: 11px;
+            margin-top: 8px;
+            display: block;
+        }
+
+        /* ============================================================
+           EMPTY STATE
+           ============================================================ */
+        .empty-state {
+            text-align: center;
+            padding: 25px 10px;
+            color: #445566;
+        }
+
+        .empty-state i {
+            font-size: 36px;
+            color: rgba(255, 255, 255, 0.04);
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+        }
+
+        /* ============================================================
+           RESPONSIVO
+           ============================================================ */
+        @media (max-width: 768px) {
+            .header {
+                padding: 16px 20px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .avatar {
+                width: 46px;
+                height: 46px;
+                font-size: 20px;
+            }
+
+            .card {
+                padding: 18px 18px;
+            }
+
+            .form-group {
+                min-width: 100%;
+            }
+
+            .appointment-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .appointment-item .actions {
+                justify-content: flex-end;
+            }
+
+            .whatsapp-badge {
+                font-size: 12px;
+                padding: 5px 12px;
+            }
+
+            .notification {
+                left: 20px;
+                right: 20px;
+                max-width: none;
+                bottom: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-left {
+                flex-wrap: wrap;
+            }
+
+            .header .sub {
+                font-size: 12px;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- ============================================================
+        HEADER
+        ============================================================ -->
+        <header class="header">
+            <div class="header-left">
+                <div class="avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <h1>Prontuário <span>Lucas</span></h1>
+                    <div class="sub">
+                        <i class="fas fa-id-card" style="color:#4a9eff;"></i>
+                        Paciente: Lucas Mendes | CPF: 277.696.XXX-XX
+                    </div>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="whatsapp-badge">
+                    <i class="fab fa-whatsapp"></i>
+                    +55 12 98846-1978
+                </div>
+                <span class="status-dot"></span>
+            </div>
+        </header>
+
+        <!-- ============================================================
+        GRID PRINCIPAL (2 colunas)
+        ============================================================ -->
+        <div class="main-grid">
+
+            <!-- ========== COLUNA ESQUERDA ========== -->
+            <div>
+
+                <!-- CARD: AGENDAMENTOS -->
+                <div class="card" style="margin-bottom:22px;">
+                    <div class="card-title">
+                        <i class="fas fa-calendar-plus"></i>
+                        Agendamentos
+                    </div>
+
+                    <div class="form-row" style="margin-bottom:14px;">
+                        <div class="form-group">
+                            <label>Paciente</label>
+                            <input type="text" id="pacienteInput" value="Lucas Mendes" readonly style="opacity:0.7;">
+                        </div>
+                        <div class="form-group">
+                            <label>Médico</label>
+                            <input type="text" id="medicoInput" placeholder="Dr. Especialista">
+                        </div>
+                        <div class="form-group">
+                            <label>Data/Hora</label>
+                            <input type="datetime-local" id="dataInput">
+                        </div>
+                    </div>
+
+                    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px;">
+                        <button class="btn btn-primary" onclick="adicionarAgendamento()">
+                            <i class="fas fa-plus"></i> Agendar
+                        </button>
+                        <button class="btn btn-success" onclick="enviarWhatsApp()">
+                            <i class="fab fa-whatsapp"></i> Enviar Alerta
+                        </button>
+                    </div>
+
+                    <div class="scroll-area" id="appointmentsList">
+                        <!-- Inserido via JS -->
+                    </div>
+                </div>
+
+                <!-- CARD: RELATÓRIOS / EVOLUÇÃO -->
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-file-medical-alt"></i>
+                        Relatórios / Evolução
+                    </div>
+
+                    <div class="form-row" style="margin-bottom:12px;">
+                        <div class="form-group">
+                            <label>Novo Relatório</label>
+                            <textarea id="relatorioInput" placeholder="Descreva a evolução do paciente..."></textarea>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-block" onclick="adicionarRelatorio()">
+                        <i class="fas fa-save"></i> Salvar Relatório
+                    </button>
+
+                    <div style="margin-top:16px;">
+                        <div class="scroll-area" id="relatoriosList">
+                            <!-- Inserido via JS -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ========== COLUNA DIREITA ========== -->
+            <div>
+
+                <!-- CARD: RECEITAS E EXAMES -->
+                <div class="card" style="margin-bottom:22px;">
+                    <div class="card-title">
+                        <i class="fas fa-prescription"></i>
+                        Receitas &amp; Exames
+                    </div>
+
+                    <div class="file-upload-area" onclick="document.getElementById('fileInput').click()">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <div style="font-size:14px; color:#8899bb;">
+                            Clique para enviar arquivo<br>
+                            <span style="font-size:12px; color:#445566;">PDF, JPG, PNG, DOC</span>
+                        </div>
+                        <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+                    </div>
+
+                    <div class="scroll-area" id="arquivosList">
+                        <!-- Inserido via JS -->
+                    </div>
+                </div>
+
+                <!-- CARD: ESTATÍSTICAS / INFO -->
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-chart-pie"></i>
+                        Resumo do Paciente
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                        <div style="background:rgba(255,255,255,0.03); border-radius:12px; padding:14px; text-align:center;">
+                            <div style="font-size:28px; font-weight:700; color:#4a9eff;" id="totalConsultas">0</div>
+                            <div style="font-size:12px; color:#667788;">Consultas</div>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.03); border-radius:12px; padding:14px; text-align:center;">
+                            <div style="font-size:28px; font-weight:700; color:#27ae60;" id="totalArquivos">0</div>
+                            <div style="font-size:12px; color:#667788;">Arquivos</div>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.03); border-radius:12px; padding:14px; text-align:center;">
+                            <div style="font-size:28px; font-weight:700; color:#f1c40f;" id="totalRelatorios">0</div>
+                            <div style="font-size:12px; color:#667788;">Relatórios</div>
+                        </div>
+                        <div style="background:rgba(255,255,255,0.03); border-radius:12px; padding:14px; text-align:center;">
+                            <div style="font-size:28px; font-weight:700; color:#e74c3c;" id="alertasPendentes">0</div>
+                            <div style="font-size:12px; color:#667788;">Alertas</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:14px; padding-top:14px; border-top:1px solid rgba(255,255,255,0.05);">
+                        <button class="btn btn-danger btn-block" onclick="limparTudo()">
+                            <i class="fas fa-trash-alt"></i> Limpar todos os dados
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ============================================================
+        RODAPÉ
+        ============================================================ -->
+        <footer style="text-align:center; color:#445566; font-size:13px; margin-top:20px; padding:15px 0; border-top:1px solid rgba(255,255,255,0.03);">
+            <i class="fas fa-heart" style="color:#e74c3c;"></i>
+            Prontuário Digital - Lucas Mendes &bull; Dados salvos localmente
+        </footer>
+
+    </div>
+
+    <!-- ============================================================
+    NOTIFICAÇÃO FLUTUANTE
+    ============================================================ -->
+    <div id="notification" class="notification">
+        <div class="titulo">
+            <i class="fas fa-bell"></i>
+            <span id="notifTitulo">Notificação</span>
+        </div>
+        <div class="mensagem" id="notifMensagem">Mensagem aqui</div>
+        <span class="hora" id="notifHora">Agora</span>
+    </div>
+
+    <!-- ============================================================
+    SCRIPT
+    ============================================================ -->
+    <script>
+        // ============================================================
+        //  BANCO DE DADOS
+        // ============================================================
+        let dados = {
+            agendamentos: [],
+            relatorios: [],
+            arquivos: []
+        };
+
+        const CHAVE = 'prontuarioLucas';
+
+        function carregarDados() {
+            const salvo = localStorage.getItem(CHAVE);
+            if (salvo) {
+                try {
+                    const parsed = JSON.parse(salvo);
+                    dados.agendamentos = parsed.agendamentos || [];
+                    dados.relatorios = parsed.relatorios || [];
+                    dados.arquivos = parsed.arquivos || [];
+                } catch (e) {
+                    dados = { agendamentos: [], relatorios: [], arquivos: [] };
+                }
+            } else {
+                // Dados de exemplo
+                const agora = new Date();
+                const amanha = new Date(agora);
+                amanha.setDate(amanha.getDate() + 1);
+
+                dados.agendamentos = [{
+                    id: Date.now() + 1,
+                    paciente: 'Lucas Mendes',
+                    medico: 'Dr. Carlos Silva - Cardiologista',
+                    data: new Date(agora.getTime() + 3 * 60 * 60 * 1000).toISOString()
+                }, {
+                    id: Date.now() + 2,
+                    paciente: 'Lucas Mendes',
+                    medico: 'Dra. Mariana Souza - Dermatologista',
+                    data: amanha.toISOString()
+                }];
+
+                dados.relatorios = [{
+                    id: Date.now() + 10,
+                    texto: 'Paciente compareceu à consulta, apresentando melhora significativa. Pressão arterial controlada. Segue com medicação.',
+                    data: new Date().toISOString()
+                }];
+
+                dados.arquivos = [{
+                    id: Date.now() + 20,
+                    nome: 'Exame_Sangue_2024.pdf',
+                    tamanho: '2.4 MB',
+                    tipo: 'pdf',
+                    data: new Date().toISOString()
+                }, {
+                    id: Date.now() + 21,
+                    nome: 'Receita_Antiinflamatorio.jpg',
+                    tamanho: '856 KB',
+                    tipo: 'jpg',
+                    data: new Date().toISOString()
+                }];
+
+                salvarDados();
+            }
+            renderizarTudo();
+        }
+
+        function salvarDados() {
+            localStorage.setItem(CHAVE, JSON.stringify(dados));
+        }
+
+        // ============================================================
+        //  AGENDAMENTOS
+        // ============================================================
+        function adicionarAgendamento() {
+            const medico = document.getElementById('medicoInput').value.trim();
+            const data = document.getElementById('dataInput').value;
+
+            if (!medico || !data) {
+                mostrarNotificacao('⚠️ Atenção!', 'Preencha o médico e a data/hora.');
+                return;
+            }
+
+            const novo = {
+                id: Date.now(),
+                paciente: 'Lucas Mendes',
+                medico: medico,
+                data: new Date(data).toISOString()
+            };
+
+            dados.agendamentos.push(novo);
+            salvarDados();
+            renderizarTudo();
+            document.getElementById('medicoInput').value = '';
+            document.getElementById('dataInput').value = '';
+
+            mostrarNotificacao('✅ Agendado!', `Consulta com ${medico} marcada com sucesso.`);
+
+            // Verifica alertas
+            verificarAlertas(novo);
+        }
+
+        function deletarAgendamento(id) {
+            if (!confirm('Cancelar este agendamento?')) return;
+            dados.agendamentos = dados.agendamentos.filter(a => a.id !== id);
+            salvarDados();
+            renderizarTudo();
+            mostrarNotificacao('🗑️ Cancelado', 'Agendamento removido.');
+        }
+
+        // ============================================================
+        //  RELATÓRIOS
+        // ============================================================
+        function adicionarRelatorio() {
+            const texto = document.getElementById('relatorioInput').value.trim();
+            if (!texto) {
+                mostrarNotificacao('⚠️ Atenção!', 'Digite o relatório antes de salvar.');
+                return;
+            }
+
+            dados.relatorios.push({
+                id: Date.now(),
+                texto: texto,
+                data: new Date().toISOString()
+            });
+
+            salvarDados();
+            renderizarTudo();
+            document.getElementById('relatorioInput').value = '';
+            mostrarNotificacao('📋 Salvo!', 'Relatório adicionado com sucesso.');
+        }
+
+        function deletarRelatorio(id) {
+            if (!confirm('Remover este relatório?')) return;
+            dados.relatorios = dados.relatorios.filter(r => r.id !== id);
+            salvarDados();
+            renderizarTudo();
+        }
+
+        // ============================================================
+        //  ARQUIVOS (RECEITAS E EXAMES)
+        // ============================================================
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const files = this.files;
+            if (files.length === 0) return;
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const tamanho = (file.size / 1024).toFixed(1) + ' KB';
+                if (file.size > 1024 * 1024) {
+                    const mb = (file.size / (1024 * 1024)).toFixed(1) + ' MB';
+                    dados.arquivos.push({
+                        id: Date.now() + i,
+                        nome: file.name,
+                        tamanho: mb,
+                        tipo: file.name.split('.').pop().toLowerCase(),
+                        data: new Date().toISOString()
+                    });
+                } else {
+                    dados.arquivos.push({
+                        id: Date.now() + i,
+                        nome: file.name,
+                        tamanho: tamanho,
+                        tipo: file.name.split('.').pop().toLowerCase(),
+                        data: new Date().toISOString()
+                    });
+                }
+            }
+
+            salvarDados();
+            renderizarTudo();
+            this.value = '';
+            mostrarNotificacao('📎 Arquivo(s) enviado(s)!', `${files.length} arquivo(s) adicionado(s) com sucesso.`);
+        });
+
+        function deletarArquivo(id) {
+            if (!confirm('Remover este arquivo?')) return;
+            dados.arquivos = dados.arquivos.filter(a => a.id !== id);
+            salvarDados();
+            renderizarTudo();
+        }
+
+        function baixarArquivo(nome) {
+            mostrarNotificacao('📥 Download', `Iniciando download de ${nome} (simulado).`);
+        }
+
+        // ============================================================
+        //  WHATSAPP (ENVIAR ALERTA)
+        // ============================================================
+        function enviarWhatsApp() {
+            const numero = '12988461978';
+            const agora = new Date();
+            const dataStr = agora.toLocaleDateString('pt-BR') + ' ' + agora.toLocaleTimeString('pt-BR', { hour: '2-digit',
+                minute: '2-digit' });
+
+            // Pegar próximas consultas
+            const proximas = dados.agendamentos
+                .filter(a => new Date(a.data) > new Date())
+                .sort((a, b) => new Date(a.data) - new Date(b.data))
+                .slice(0, 3);
+
+            let msg = '🏥 *Lembrete de Consultas - Lucas Mendes*\n\n';
+            msg += `📅 *Data:* ${dataStr}\n`;
+            msg += `👤 *Paciente:* Lucas Mendes\n`;
+            msg += `📞 *Contato:* (12) 98846-1978\n\n`;
+
+            if (proximas.length === 0) {
+                msg += '✅ Nenhuma consulta agendada para os próximos dias.';
+            } else {
+                msg += '*📋 Próximas consultas:*\n';
+                proximas.forEach((c, idx) => {
+                    const d = new Date(c.data);
+                    const dataF = d.toLocaleDateString('pt-BR') + ' às ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit',
+                        minute: '2-digit' });
+                    msg += `${idx+1}. ${c.medico} - ${dataF}\n`;
+                });
+            }
+
+            msg += '\n*🔔 Lembre-se de levar todos os exames!*';
+
+            const url = `https://wa.me/55${numero}?text=${encodeURIComponent(msg)}`;
+            window.open(url, '_blank');
+
+            mostrarNotificacao('💬 WhatsApp', 'Abrindo conversa para enviar alerta.');
+        }
+
+        // ============================================================
+        //  ALERTAS AUTOMÁTICOS
+        // ============================================================
+        function verificarAlertas(novo) {
+            const d = new Date(novo.data);
+            const agora = new Date();
+            const diffHoras = (d.getTime() - agora.getTime()) / (1000 * 60 * 60);
+
+            if (diffHoras > 0 && diffHoras < 24) {
+                setTimeout(() => {
+                    mostrarNotificacao('🔔 Alerta!',
+                        `Consulta com ${novo.medico} em ${Math.round(diffHoras)} horas.`);
+                }, 3000);
+            }
+        }
+
+        function verificarNotificacoes() {
+            const agora = new Date();
+            dados.agendamentos.forEach(item => {
+                const d = new Date(item.data);
+                const diffHoras = (d.getTime() - agora.getTime()) / (1000 * 60 * 60);
+
+                // 1 dia antes
+                if (diffHoras > 20 && diffHoras < 28) {
+                    const chave = `alert_${item.id}_1dia`;
+                    if (!localStorage.getItem(chave)) {
+                        mostrarNotificacao('📅 1 dia antes!',
+                            `Amanhã você tem consulta com ${item.medico}.`);
+                        localStorage.setItem(chave, 'true');
+                    }
+                }
+
+                // 3 horas antes
+                if (diffHoras > 2.5 && diffHoras < 3.5) {
+                    const chave = `alert_${item.id}_3h`;
+                    if (!localStorage.getItem(chave)) {
+                        mostrarNotificacao('⏰ 3 horas!',
+                            `Sua consulta com ${item.medico} é em 3 horas.`);
+                        localStorage.setItem(chave, 'true');
+                    }
+                }
+
+                // 1 hora antes
+                if (diffHoras > 0.8 && diffHoras < 1.2) {
+                    const chave = `alert_${item.id}_1h`;
+                    if (!localStorage.getItem(chave)) {
+                        mostrarNotificacao('🚨 1 hora!',
+                            `Sua consulta com ${item.medico} é em 1 hora!`);
+                        localStorage.setItem(chave, 'true');
+                    }
+                }
+
+                // 30 min antes
+                if (diffHoras > 0.4 && diffHoras < 0.6) {
+                    const chave = `alert_${item.id}_30min`;
+                    if (!localStorage.getItem(chave)) {
+                        mostrarNotificacao('⚠️ 30 min!',
+                            `Sua consulta com ${item.medico} é em 30 minutos!`);
+                        localStorage.setItem(chave, 'true');
+                    }
+                }
+            });
+        }
+
+        // ============================================================
+        //  NOTIFICAÇÃO FLUTUANTE
+        // ============================================================
+        function mostrarNotificacao(titulo, mensagem) {
+            const notif = document.getElementById('notification');
+            document.getElementById('notifTitulo').textContent = titulo;
+            document.getElementById('notifMensagem').textContent = mensagem;
+            document.getElementById('notifHora').textContent = new Date().toLocaleTimeString('pt-BR', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+
+            notif.classList.add('show');
+            clearTimeout(window.notifTimeout);
+            window.notifTimeout = setTimeout(() => {
+                notif.classList.remove('show');
+            }, 7000);
+        }
+
+        // ============================================================
+        //  LIMPAR TUDO
+        // ============================================================
+        function limparTudo() {
+            if (!confirm('⚠️ Tem certeza? Isso apagará TODOS os dados permanentemente!')) return;
+            if (!confirm('Última confirmação: deseja realmente limpar tudo?')) return;
+
+            dados.agendamentos = [];
+            dados.relatorios = [];
+            dados.arquivos = [];
+            salvarDados();
+            renderizarTudo();
+            mostrarNotificacao('🗑️ Limpeza total', 'Todos os dados foram removidos.');
+        }
+
+        // ============================================================
+        //  RENDERIZAR
+        // ============================================================
+        function renderizarTudo() {
+            renderizarAgendamentos();
+            renderizarRelatorios();
+            renderizarArquivos();
+            atualizarResumo();
+        }
+
+        function renderizarAgendamentos() {
+            const container = document.getElementById('appointmentsList');
+            const sorted = [...dados.agendamentos].sort((a, b) => new Date(a.data) - new Date(b.data));
+
+            if (sorted.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-plus"></i>
+                        <p>Nenhum agendamento</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = sorted.map(item => {
+                const d = new Date(item.data);
+                const dataF = d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+                const horaF = d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+                const agora = new Date();
+                const diffHoras = (d.getTime() - agora.getTime()) / (1000 * 60 * 60);
+                let status = 'status-tag';
+                if (diffHoras < 0) status += ' passado';
+                else if (diffHoras < 24) status += ' hoje';
+                else if (diffHoras < 48) status += ' amanha';
+
+                let label = '📅 Agendado';
+                if (diffHoras < 0) label = '⏳ Passado';
+                else if (diffHoras < 24) label = '🔵 Hoje';
+                else if (diffHoras < 48) label = '🟡 Amanhã';
+
+                return `
+                    <div class="appointment-item">
+                        <div class="info">
+                            <div class="nome">${item.medico}</div>
+                            <div class="detalhes">
+                                <span><i class="fas fa-calendar-alt"></i> ${dataF}</span>
+                                <span><i class="fas fa-clock"></i> ${horaF}</span>
+                            </div>
+                        </div>
+                        <div class="actions">
+                            <span class="${status}">${label}</span>
+                            <button class="btn btn-danger btn-sm" onclick="deletarAgendamento(${item.id})">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderizarRelatorios() {
+            const container = document.getElementById('relatoriosList');
+            const sorted = [...dados.relatorios].sort((a, b) => new Date(b.data) - new Date(a.data));
+
+            if (sorted.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-file-medical-alt"></i>
+                        <p>Nenhum relatório</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = sorted.map(item => {
+                const d = new Date(item.data);
+                const dataF = d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', { hour: '2-digit',
+                    minute: '2-digit' });
+                return `
+                    <div class="relatorio-item">
+                        <div class="data"><i class="far fa-clock"></i> ${dataF}</div>
+                        <div class="texto"><i class="fas fa-quote-left"></i> ${item.texto}</div>
+                        <div style="margin-top:6px;">
+                            <button class="btn btn-danger btn-sm" onclick="deletarRelatorio(${item.id})">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderizarArquivos() {
+            const container = document.getElementById('arquivosList');
+            const sorted = [...dados.arquivos].sort((a, b) => new Date(b.data) - new Date(a.data));
+
+            if (sorted.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-file"></i>
+                        <p>Nenhum arquivo</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const icones = {
+                pdf: 'fa-file-pdf',
+                jpg: 'fa-file-image',
+                jpeg: 'fa-file-image',
+                png: 'fa-file-image',
+                doc: 'fa-file-word',
+                docx: 'fa-file-word',
+                default: 'fa-file'
+            };
+
+            container.innerHTML = sorted.map(item => {
+                const icon = icones[item.tipo] || icones.default;
+                const d = new Date(item.data);
+                const dataF = d.toLocaleDateString('pt-BR');
+                return `
+                    <div class="arquivo-item">
+                        <div class="file-info">
+                            <i class="fas ${icon}"></i>
+                            <div>
+                                <div class="nome">${item.nome}</div>
+                                <div style="font-size:12px; color:#667788;">
+                                    ${item.tamanho} • ${dataF}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="file-actions">
+                            <button class="btn btn-outline btn-sm" onclick="baixarArquivo('${item.nome}')">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="deletarArquivo(${item.id})">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function atualizarResumo() {
+            document.getElementById('totalConsultas').textContent = dados.agendamentos.length;
+            document.getElementById('totalArquivos').textContent = dados.arquivos.length;
+            document.getElementById('totalRelatorios').textContent = dados.relatorios.length;
+
+            const agora = new Date();
+            const alertas = dados.agendamentos.filter(a => {
+                const diff = (new Date(a.data).getTime() - agora.getTime()) / (1000 * 60 * 60);
+                return diff > 0 && diff < 48;
+            });
+            document.getElementById('alertasPendentes').textContent = alertas.length;
+        }
+
+        // ============================================================
+        //  DATA/HORA PADRÃO
+        // ============================================================
+        function setDefaultDateTime() {
+            const agora = new Date();
+            agora.setHours(agora.getHours() + 2);
+            document.getElementById('dataInput').value = agora.toISOString().slice(0, 16);
+        }
+
+        // ============================================================
+        //  INICIAR
+        // ============================================================
+        setDefaultDateTime();
+        carregarDados();
+
+        setInterval(verificarNotificacoes, 30000);
+
+        // Enter para agendar
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.target.closest('.card')) {
+                adicionarAgendamento();
+            }
+        });
+
+        console.log('🏥 Prontuário Digital - Lucas Mendes');
+        console.log('📊 Agendamentos:', dados.agendamentos.length);
+        console.log('📋 Relatórios:', dados.relatorios.length);
+        console.log('📎 Arquivos:', dados.arquivos.length);
+        console.log('📱 WhatsApp: +55 12 98846-1978');
+    </script>
+
+</body>
+</html>
